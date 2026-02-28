@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,29 +61,33 @@ function tryParse<T>(storageKey: string): T | null {
     }
 }
 
-function readAll(): IntegrationStore {
+export function readAll(email: string): IntegrationStore {
+    if (!email) {
+        return { claude: null, gemini: null, geminiMonitoring: null, openai: null };
+    }
     return {
-        claude: tryParse<ClaudeData>(KEYS.claude),
-        gemini: tryParse<GeminiData>(KEYS.gemini),
-        geminiMonitoring: tryParse<GeminiMonitoringData>(KEYS.geminiMonitoring),
-        openai: tryParse<OpenAIData>(KEYS.openai),
+        claude: tryParse<ClaudeData>(`${email}_${KEYS.claude}`),
+        gemini: tryParse<GeminiData>(`${email}_${KEYS.gemini}`),
+        geminiMonitoring: tryParse<GeminiMonitoringData>(`${email}_${KEYS.geminiMonitoring}`),
+        openai: tryParse<OpenAIData>(`${email}_${KEYS.openai}`),
     };
 }
 
 // ─── Disconnect helper (exported so ConnectPage / Dashboard can use it) ───────
 
-export function disconnectTool(tool: ToolKey): void {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem(KEYS[tool]);
-    // also remove the raw key entry
-    localStorage.removeItem(`prism_${tool === "geminiMonitoring" ? "gemini-monitoring" : tool}_key`);
-    // fire a storage event so other same-tab consumers react
+export function disconnectTool(email: string, tool: ToolKey | "geminiMonitoring"): void {
+    if (typeof window === "undefined" || !email) return;
+    localStorage.removeItem(`${email}_${KEYS[tool as ToolKey]}`);
+    localStorage.removeItem(`${email}_prism_${tool === "geminiMonitoring" ? "gemini-monitoring" : tool}_key`);
     window.dispatchEvent(new Event("prism-storage-changed"));
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useIntegrationData(): IntegrationStore & { refresh: () => void } {
+    const { data: session } = useSession();
+    const email = session?.user?.email || "";
+
     const [store, setStore] = useState<IntegrationStore>({
         claude: null,
         gemini: null,
@@ -91,17 +96,16 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void }
     });
 
     const refresh = useCallback(() => {
-        setStore(readAll());
-    }, []);
+        setStore(readAll(email));
+    }, [email]);
 
     useEffect(() => {
-        // Read immediately on mount (client-side only)
+        if (!email) return;
+
         refresh();
 
-        // Re-read when localStorage changes from another tab
         const onStorageEvent = (e: StorageEvent) => {
-            const watched = Object.values(KEYS) as string[];
-            if (!e.key || watched.includes(e.key)) refresh();
+            refresh();
         };
 
         // Re-read on our custom same-tab event (fired by disconnectTool and persist)
@@ -113,17 +117,17 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void }
             window.removeEventListener("storage", onStorageEvent);
             window.removeEventListener("prism-storage-changed", onCustomEvent);
         };
-    }, [refresh]);
+    }, [refresh, email]);
 
     return { ...store, refresh };
 }
 
 // ─── persist helper (fires custom event so Dashboard re-reads immediately) ────
 
-export function persistIntegration(key: string, data: unknown): void {
-    if (typeof window === "undefined") return;
-    localStorage.setItem(`prism_${key}_key`, typeof data === "string" ? data : "");
-    localStorage.setItem(`prism_${key}_data`, JSON.stringify(data));
+export function persistIntegration(email: string, key: string, data: unknown): void {
+    if (typeof window === "undefined" || !email) return;
+    localStorage.setItem(`${email}_prism_${key}_key`, typeof data === "string" ? data : "");
+    localStorage.setItem(`${email}_prism_${key}_data`, JSON.stringify(data));
     window.dispatchEvent(new Event("prism-storage-changed"));
 }
 

@@ -6,6 +6,7 @@ import {
     Key, Check, X, Loader2, ExternalLink, AlertTriangle,
     ChevronRight, Eye, EyeOff, Cloud, FileJson, Unplug
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { persistIntegration, disconnectTool } from "@/hooks/useIntegrationData";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,21 +21,30 @@ interface IntegrationResult {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function tryReadLS(key: string): Record<string, unknown> | null {
+function tryReadLS(email: string, key: string): Record<string, unknown> | null {
+    if (!email) return null;
     try {
-        const r = localStorage.getItem(key);
+        const r = localStorage.getItem(`${email}_${key}`);
         return r ? JSON.parse(r) : null;
     } catch {
         return null;
     }
 }
 
-function readAllStates(): Record<string, IntegrationResult> {
+function readAllStates(email: string): Record<string, IntegrationResult> {
+    if (!email) {
+        return {
+            claude: { status: "idle" },
+            openai: { status: "idle" },
+            gemini: { status: "idle" },
+            "gemini-monitoring": { status: "idle" },
+        };
+    }
     return {
-        claude: tryReadLS("prism_claude_data") ? { status: "success", data: tryReadLS("prism_claude_data")! } : { status: "idle" },
-        openai: tryReadLS("prism_openai_data") ? { status: "success", data: tryReadLS("prism_openai_data")! } : { status: "idle" },
-        gemini: tryReadLS("prism_gemini_data") ? { status: "success", data: tryReadLS("prism_gemini_data")! } : { status: "idle" },
-        "gemini-monitoring": tryReadLS("prism_gemini-monitoring_data") ? { status: "success", data: tryReadLS("prism_gemini-monitoring_data")! } : { status: "idle" },
+        claude: tryReadLS(email, "prism_claude_data") ? { status: "success", data: tryReadLS(email, "prism_claude_data")! } : { status: "idle" },
+        openai: tryReadLS(email, "prism_openai_data") ? { status: "success", data: tryReadLS(email, "prism_openai_data")! } : { status: "idle" },
+        gemini: tryReadLS(email, "prism_gemini_data") ? { status: "success", data: tryReadLS(email, "prism_gemini_data")! } : { status: "idle" },
+        "gemini-monitoring": tryReadLS(email, "prism_gemini-monitoring_data") ? { status: "success", data: tryReadLS(email, "prism_gemini-monitoring_data")! } : { status: "idle" },
     };
 }
 
@@ -47,6 +57,9 @@ export default function ConnectPage() {
     const [openaiKey, setOpenaiKey] = useState("");
     const [gcpProjectId, setGcpProjectId] = useState("");
     const [serviceAccountJson, setServiceAccountJson] = useState("");
+
+    const { data: session } = useSession();
+    const email = session?.user?.email || "";
 
     // Show / hide secrets
     const [show, setShow] = useState({ claude: false, gemini: false, openai: false });
@@ -61,19 +74,19 @@ export default function ConnectPage() {
 
     // On mount: read localStorage and mark already-connected tools
     useEffect(() => {
-        setStates(readAllStates());
-    }, []);
+        if (email) setStates(readAllStates(email));
+    }, [email]);
 
     // Re-sync whenever any tab connects/disconnects
     useEffect(() => {
-        const onChanged = () => setStates(readAllStates());
+        const onChanged = () => setStates(readAllStates(email));
         window.addEventListener("prism-storage-changed", onChanged);
         window.addEventListener("storage", onChanged);
         return () => {
             window.removeEventListener("prism-storage-changed", onChanged);
             window.removeEventListener("storage", onChanged);
         };
-    }, []);
+    }, [email]);
 
     const setStatus = useCallback((id: string, result: IntegrationResult) =>
         setStates(prev => ({ ...prev, [id]: result })), []);
@@ -92,7 +105,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("claude", { status: "error", error: data.error }); return; }
             setStatus("claude", { status: "success", data });
-            persistIntegration("claude", data);
+            if (email) persistIntegration(email, "claude", data);
         } catch {
             setStatus("claude", { status: "error", error: "Network error — check your connection." });
         }
@@ -110,7 +123,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("gemini", { status: "error", error: data.error }); return; }
             setStatus("gemini", { status: "success", data });
-            persistIntegration("gemini", data);
+            if (email) persistIntegration(email, "gemini", data);
         } catch {
             setStatus("gemini", { status: "error", error: "Network error — check your connection." });
         }
@@ -131,7 +144,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("gemini-monitoring", { status: "error", error: data.error }); return; }
             setStatus("gemini-monitoring", { status: "success", data });
-            persistIntegration("gemini-monitoring", data);
+            if (email) persistIntegration(email, "gemini-monitoring", data);
         } catch {
             setStatus("gemini-monitoring", { status: "error", error: "Network error — check your connection." });
         }
@@ -149,16 +162,16 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("openai", { status: "error", error: data.error }); return; }
             setStatus("openai", { status: "success", data });
-            persistIntegration("openai", data);
+            if (email) persistIntegration(email, "openai", data);
         } catch {
             setStatus("openai", { status: "error", error: "Network error — check your connection." });
         }
     }, [openaiKey, setStatus]);
 
     const handleDisconnect = useCallback((tool: "claude" | "gemini" | "geminiMonitoring" | "openai", stateId: string) => {
-        disconnectTool(tool);
+        if (email) disconnectTool(email, tool);
         setStatus(stateId, { status: "idle" });
-    }, [setStatus]);
+    }, [setStatus, email]);
 
     return (
         <div className="min-h-screen p-6 md:p-12 max-w-4xl mx-auto">
