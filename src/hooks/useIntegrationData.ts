@@ -127,23 +127,4 @@ export function persistIntegration(key: string, data: unknown): void {
     window.dispatchEvent(new Event("prism-storage-changed"));
 }
 
-// ─── Mock Data Fallback ────────────────────────────────────────────────────────
 
-export const MOCK_DATA = {
-    weeklyTrend: [
-        { day: "Mon", Claude: 12000, Gemini: 4000, ChatGPT: 8000 },
-        { day: "Tue", Claude: 18000, Gemini: 8000, ChatGPT: 11000 },
-        { day: "Wed", Claude: 25000, Gemini: 6000, ChatGPT: 15000 },
-        { day: "Thu", Claude: 22000, Gemini: 10000, ChatGPT: 9000 },
-        { day: "Fri", Claude: 30000, Gemini: 12000, ChatGPT: 20000 },
-        { day: "Sat", Claude: 8000, Gemini: 2000, ChatGPT: 5000 },
-        { day: "Sun", Claude: 5000, Gemini: 1000, ChatGPT: 2000 },
-    ],
-    models: [
-        { name: "claude-3-5-sonnet", usage: 35 },
-        { name: "gpt-4o", usage: 30 },
-        { name: "claude-3-opus", usage: 15 },
-        { name: "gemini-1.5-pro", usage: 12 },
-        { name: "gpt-4-turbo", usage: 8 },
-    ],
-};

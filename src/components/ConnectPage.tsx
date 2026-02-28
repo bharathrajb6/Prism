@@ -18,6 +18,26 @@ interface IntegrationResult {
     error?: string;
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function tryReadLS(key: string): Record<string, unknown> | null {
+    try {
+        const r = localStorage.getItem(key);
+        return r ? JSON.parse(r) : null;
+    } catch {
+        return null;
+    }
+}
+
+function readAllStates(): Record<string, IntegrationResult> {
+    return {
+        claude: tryReadLS("prism_claude_data") ? { status: "success", data: tryReadLS("prism_claude_data")! } : { status: "idle" },
+        openai: tryReadLS("prism_openai_data") ? { status: "success", data: tryReadLS("prism_openai_data")! } : { status: "idle" },
+        gemini: tryReadLS("prism_gemini_data") ? { status: "success", data: tryReadLS("prism_gemini_data")! } : { status: "idle" },
+        "gemini-monitoring": tryReadLS("prism_gemini-monitoring_data") ? { status: "success", data: tryReadLS("prism_gemini-monitoring_data")! } : { status: "idle" },
+    };
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ConnectPage() {
@@ -31,39 +51,22 @@ export default function ConnectPage() {
     // Show / hide secrets
     const [show, setShow] = useState({ claude: false, gemini: false, openai: false });
 
-    // Parse existing localStorage state → pre-mark already-connected tools
-    const [states, setStates] = useState<Record<string, IntegrationResult>>(() => {
-        if (typeof window === "undefined") return {
-            claude: { status: "idle" },
-            openai: { status: "idle" },
-            gemini: { status: "idle" },
-            "gemini-monitoring": { status: "idle" },
-        };
-        const tryRead = (key: string) => {
-            try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; }
-        };
-        return {
-            claude: tryRead("prism_claude_data") ? { status: "success", data: tryRead("prism_claude_data") } : { status: "idle" },
-            openai: tryRead("prism_openai_data") ? { status: "success", data: tryRead("prism_openai_data") } : { status: "idle" },
-            gemini: tryRead("prism_gemini_data") ? { status: "success", data: tryRead("prism_gemini_data") } : { status: "idle" },
-            "gemini-monitoring": tryRead("prism_gemini-monitoring_data") ? { status: "success", data: tryRead("prism_gemini-monitoring_data") } : { status: "idle" },
-        };
+    // Integration statuses — start idle (SSR-safe), then hydrate from localStorage
+    const [states, setStates] = useState<Record<string, IntegrationResult>>({
+        claude: { status: "idle" },
+        openai: { status: "idle" },
+        gemini: { status: "idle" },
+        "gemini-monitoring": { status: "idle" },
     });
 
-    // Re-sync if another tab connects/disconnects
+    // On mount: read localStorage and mark already-connected tools
     useEffect(() => {
-        const onChanged = () => {
-            const tryRead = (key: string) => {
-                try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; }
-            };
-            setStates(prev => ({
-                ...prev,
-                claude: tryRead("prism_claude_data") ? { status: "success", data: tryRead("prism_claude_data") } : (prev.claude.status === "success" ? { status: "idle" } : prev.claude),
-                openai: tryRead("prism_openai_data") ? { status: "success", data: tryRead("prism_openai_data") } : (prev.openai.status === "success" ? { status: "idle" } : prev.openai),
-                gemini: tryRead("prism_gemini_data") ? { status: "success", data: tryRead("prism_gemini_data") } : (prev.gemini.status === "success" ? { status: "idle" } : prev.gemini),
-                "gemini-monitoring": tryRead("prism_gemini-monitoring_data") ? { status: "success", data: tryRead("prism_gemini-monitoring_data") } : (prev["gemini-monitoring"].status === "success" ? { status: "idle" } : prev["gemini-monitoring"]),
-            }));
-        };
+        setStates(readAllStates());
+    }, []);
+
+    // Re-sync whenever any tab connects/disconnects
+    useEffect(() => {
+        const onChanged = () => setStates(readAllStates());
         window.addEventListener("prism-storage-changed", onChanged);
         window.addEventListener("storage", onChanged);
         return () => {
@@ -72,8 +75,8 @@ export default function ConnectPage() {
         };
     }, []);
 
-    const setStatus = (id: string, result: IntegrationResult) =>
-        setStates(prev => ({ ...prev, [id]: result }));
+    const setStatus = useCallback((id: string, result: IntegrationResult) =>
+        setStates(prev => ({ ...prev, [id]: result })), []);
 
     // ── Connect handlers ─────────────────────────────────────────────────────
 
@@ -93,7 +96,7 @@ export default function ConnectPage() {
         } catch {
             setStatus("claude", { status: "error", error: "Network error — check your connection." });
         }
-    }, [claudeKey]);
+    }, [claudeKey, setStatus]);
 
     const connectGemini = useCallback(async () => {
         if (!geminiKey.trim()) return;
@@ -111,7 +114,7 @@ export default function ConnectPage() {
         } catch {
             setStatus("gemini", { status: "error", error: "Network error — check your connection." });
         }
-    }, [geminiKey]);
+    }, [geminiKey, setStatus]);
 
     const connectGeminiMonitoring = useCallback(async () => {
         if (!gcpProjectId.trim() || !serviceAccountJson.trim()) return;
@@ -132,7 +135,7 @@ export default function ConnectPage() {
         } catch {
             setStatus("gemini-monitoring", { status: "error", error: "Network error — check your connection." });
         }
-    }, [gcpProjectId, serviceAccountJson]);
+    }, [gcpProjectId, serviceAccountJson, setStatus]);
 
     const connectOpenAI = useCallback(async () => {
         if (!openaiKey.trim()) return;
@@ -150,13 +153,12 @@ export default function ConnectPage() {
         } catch {
             setStatus("openai", { status: "error", error: "Network error — check your connection." });
         }
-    }, [openaiKey]);
+    }, [openaiKey, setStatus]);
 
-    // ── Disconnect handlers ────────────────────────────────────────────────────
-    const handleDisconnect = (tool: "claude" | "gemini" | "geminiMonitoring" | "openai", stateId: string) => {
+    const handleDisconnect = useCallback((tool: "claude" | "gemini" | "geminiMonitoring" | "openai", stateId: string) => {
         disconnectTool(tool);
         setStatus(stateId, { status: "idle" });
-    };
+    }, [setStatus]);
 
     return (
         <div className="min-h-screen p-6 md:p-12 max-w-4xl mx-auto">
@@ -620,3 +622,4 @@ function OpenAIResult({ data }: { data: Record<string, unknown> }) {
         </motion.div>
     );
 }
+
