@@ -105,7 +105,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("claude", { status: "error", error: data.error }); return; }
             setStatus("claude", { status: "success", data });
-            if (email) persistIntegration(email, "claude", data);
+            if (email) persistIntegration(email, "claude", data, { adminKey: claudeKey.trim() });
         } catch {
             setStatus("claude", { status: "error", error: "Network error — check your connection." });
         }
@@ -123,7 +123,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("gemini", { status: "error", error: data.error }); return; }
             setStatus("gemini", { status: "success", data });
-            if (email) persistIntegration(email, "gemini", data);
+            if (email) persistIntegration(email, "gemini", data, { apiKey: geminiKey.trim() });
         } catch {
             setStatus("gemini", { status: "error", error: "Network error — check your connection." });
         }
@@ -144,7 +144,10 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("gemini-monitoring", { status: "error", error: data.error }); return; }
             setStatus("gemini-monitoring", { status: "success", data });
-            if (email) persistIntegration(email, "gemini-monitoring", data);
+            if (email) persistIntegration(email, "gemini-monitoring", data, {
+                projectId: gcpProjectId.trim(),
+                serviceAccountJson: serviceAccountJson.trim(),
+            });
         } catch {
             setStatus("gemini-monitoring", { status: "error", error: "Network error — check your connection." });
         }
@@ -162,7 +165,7 @@ export default function ConnectPage() {
             const data = await res.json();
             if (!res.ok) { setStatus("openai", { status: "error", error: data.error }); return; }
             setStatus("openai", { status: "success", data });
-            if (email) persistIntegration(email, "openai", data);
+            if (email) persistIntegration(email, "openai", data, { apiKey: openaiKey.trim() });
         } catch {
             setStatus("openai", { status: "error", error: "Network error — check your connection." });
         }

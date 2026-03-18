@@ -8,7 +8,7 @@ import {
 } from "recharts";
 import {
     Cpu, Activity, Zap, Bot, Code2, ArrowUpRight,
-    ExternalLink, TrendingUp, DollarSign, PlugZap
+    ExternalLink, TrendingUp, DollarSign, PlugZap, RefreshCw
 } from "lucide-react";
 import Link from "next/link";
 import { useIntegrationData } from "@/hooks/useIntegrationData";
@@ -258,12 +258,24 @@ export default function Dashboard() {
                         <p className="text-gray-400 mt-2 text-sm">Your AI usage, unified in one view</p>
                     </div>
 
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-900/30 border border-green-500/30 w-fit">
-                        <div className="relative flex h-2.5 w-2.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => integrations.refetchAll()}
+                            disabled={integrations.isRefetching}
+                            className={`p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all ${integrations.isRefetching ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            title="Refresh API Data"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${integrations.isRefetching ? 'animate-spin' : ''}`} />
+                        </button>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-900/30 border border-green-500/30 w-fit">
+                            <div className="relative flex h-2.5 w-2.5">
+                                <span className={`absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 ${integrations.isRefetching ? '' : 'animate-ping'}`} />
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+                            </div>
+                            <span className="text-sm font-medium text-green-400">
+                                {integrations.isRefetching ? "Syncing..." : "Live Data"}
+                            </span>
                         </div>
-                        <span className="text-sm font-medium text-green-400">Live Data</span>
                     </div>
                 </motion.div>
 

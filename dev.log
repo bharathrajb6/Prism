@@ -24,3 +24,196 @@
 ✓ Compiled in 266ms
  GET / 200 in 294ms (compile: 78ms, proxy.ts: 13ms, render: 202ms)
  GET /api/auth/session 200 in 12ms (compile: 5ms, render: 7ms)
+ GET /api/auth/session 200 in 37ms (compile: 25ms, render: 12ms)
+ GET /api/auth/session 200 in 22ms (compile: 8ms, render: 14ms)
+ GET /api/auth/session 200 in 18ms (compile: 6ms, render: 11ms)
+ GET /api/auth/session 200 in 54ms (compile: 30ms, render: 24ms)
+ GET / 200 in 45ms (compile: 8ms, proxy.ts: 5ms, render: 32ms)
+ GET /api/auth/session 200 in 10ms (compile: 5ms, render: 5ms)
+ GET /api/auth/session 200 in 27ms (compile: 11ms, render: 15ms)
+ GET /connect 200 in 65ms (compile: 47ms, proxy.ts: 9ms, render: 9ms)
+ GET /api/auth/session 200 in 17ms (compile: 5ms, render: 12ms)
+ POST /api/integrations/gemini 200 in 533ms (compile: 45ms, render: 488ms)
+ GET /api/auth/session 200 in 22ms (compile: 12ms, render: 10ms)
+✓ Compiled in 44ms
+ POST /api/integrations/gemini-monitoring 200 in 2.8s (compile: 65ms, render: 2.8s)
+✓ Compiled in 105ms
+✓ Compiled in 15ms
+✓ Compiled in 175ms
+  Reload env: .env.local
+ GET /connect 200 in 108ms (compile: 59ms, proxy.ts: 30ms, render: 19ms)
+ GET /api/auth/session 200 in 91ms (compile: 78ms, render: 13ms)
+ GET /connect 200 in 111ms (compile: 4ms, proxy.ts: 5ms, render: 103ms)
+ GET /api/auth/session 200 in 10ms (compile: 4ms, render: 6ms)
+ GET /api/auth/csrf 200 in 14ms (compile: 6ms, render: 8ms)
+ POST /api/auth/signout 200 in 9ms (compile: 1695µs, render: 7ms)
+ GET /login?callbackUrl=%2Fconnect 200 in 55ms (compile: 28ms, render: 26ms)
+ GET /api/auth/session 200 in 8ms (compile: 1334µs, render: 6ms)
+ GET /login?callbackUrl=%2Fconnect 200 in 42ms (compile: 3ms, render: 39ms)
+ GET /api/auth/session 200 in 9ms (compile: 3ms, render: 6ms)
+ GET /api/auth/providers 200 in 18ms (compile: 6ms, render: 11ms)
+ GET /api/auth/csrf 200 in 7ms (compile: 1623µs, render: 6ms)
+[next-auth][error][SIGNIN_OAUTH_ERROR] 
+https://next-auth.js.org/errors#signin_oauth_error client_id is required {
+  error: {
+    message: 'client_id is required',
+    stack: 'TypeError: client_id is required\n' +
+      '    at new BaseClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:1318:19)\n' +
+      '    at new Client (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:2843:13)\n' +
+      '    at openidClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:410:20)\n' +
+      '    at getAuthorizationUrl (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1764:51)\n' +
+      '    at Object.signin (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1846:66)\n' +
+      '    at AuthHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3294:49)\n' +
+      '    at async NextAuthRouteHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3501:30)\n' +
+      '    at async NextAuth._args$ (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3536:24)\n' +
+      '    at async AppRouteRouteModule.do (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:37866)\n' +
+      '    at async AppRouteRouteModule.handle (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:45156)\n' +
+      '    at async responseGenerator (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12519:38)\n' +
+      '    at async AppRouteRouteModule.handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:1:191938)\n' +
+      '    at async handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12582:32)\n' +
+      '    at async Module.handler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12635:13)\n' +
+      '    at async DevServer.renderToResponseWithComponentsImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1442:9)\n' +
+      '    at async DevServer.renderPageComponent (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1494:24)\n' +
+      '    at async DevServer.renderToResponseImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1544:32)\n' +
+      '    at async DevServer.pipeImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1038:25)\n' +
+      '    at async NextNodeServer.handleCatchallRenderRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/next-server.js:395:17)\n' +
+      '    at async DevServer.handleRequestImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:929:17)\n' +
+      '    at async /Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:387:20\n' +
+      '    at async Span.traceAsyncFn (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/trace/trace.js:157:20)\n' +
+      '    at async DevServer.handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:383:24)\n' +
+      '    at async invokeRender (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:248:21)\n' +
+      '    at async handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:447:24)\n' +
+      '    at async requestHandlerImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:496:13)\n' +
+      '    at async Server.requestListener (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/start-server.js:226:13)',
+    name: 'TypeError'
+  },
+  providerId: 'github',
+  message: 'client_id is required'
+}
+ POST /api/auth/signin/github 200 in 9ms (compile: 1357µs, render: 7ms)
+ GET /api/auth/error?error=OAuthSignin 302 in 5ms (compile: 902µs, render: 4ms)
+ GET /api/auth/signin?error=OAuthSignin 302 in 5ms (compile: 1221µs, render: 4ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 25ms (compile: 1936µs, render: 23ms)
+ GET /api/auth/session 200 in 6ms (compile: 955µs, render: 5ms)
+ GET /api/auth/providers 200 in 15ms (compile: 7ms, render: 7ms)
+ GET /api/auth/csrf 200 in 6ms (compile: 1214µs, render: 5ms)
+[next-auth][error][SIGNIN_OAUTH_ERROR] 
+https://next-auth.js.org/errors#signin_oauth_error client_id is required {
+  error: {
+    message: 'client_id is required',
+    stack: 'TypeError: client_id is required\n' +
+      '    at new BaseClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:1318:19)\n' +
+      '    at new Client (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:2843:13)\n' +
+      '    at openidClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:410:20)\n' +
+      '    at getAuthorizationUrl (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1764:51)\n' +
+      '    at Object.signin (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1846:66)\n' +
+      '    at AuthHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3294:49)\n' +
+      '    at async NextAuthRouteHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3501:30)\n' +
+      '    at async NextAuth._args$ (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3536:24)\n' +
+      '    at async AppRouteRouteModule.do (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:37866)\n' +
+      '    at async AppRouteRouteModule.handle (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:45156)\n' +
+      '    at async responseGenerator (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12519:38)\n' +
+      '    at async AppRouteRouteModule.handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:1:191938)\n' +
+      '    at async handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12582:32)\n' +
+      '    at async Module.handler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12635:13)\n' +
+      '    at async DevServer.renderToResponseWithComponentsImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1442:9)\n' +
+      '    at async DevServer.renderPageComponent (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1494:24)\n' +
+      '    at async DevServer.renderToResponseImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1544:32)\n' +
+      '    at async DevServer.pipeImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1038:25)\n' +
+      '    at async NextNodeServer.handleCatchallRenderRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/next-server.js:395:17)\n' +
+      '    at async DevServer.handleRequestImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:929:17)\n' +
+      '    at async /Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:387:20\n' +
+      '    at async Span.traceAsyncFn (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/trace/trace.js:157:20)\n' +
+      '    at async DevServer.handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:383:24)\n' +
+      '    at async invokeRender (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:248:21)\n' +
+      '    at async handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:447:24)\n' +
+      '    at async requestHandlerImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:496:13)\n' +
+      '    at async Server.requestListener (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/start-server.js:226:13)',
+    name: 'TypeError'
+  },
+  providerId: 'github',
+  message: 'client_id is required'
+}
+ POST /api/auth/signin/github 200 in 6ms (compile: 783µs, render: 5ms)
+ GET /api/auth/error?error=OAuthSignin 302 in 5ms (compile: 754µs, render: 4ms)
+ GET /api/auth/signin?error=OAuthSignin 302 in 5ms (compile: 626µs, render: 4ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 26ms (compile: 1881µs, render: 25ms)
+ GET /api/auth/session 200 in 5ms (compile: 756µs, render: 4ms)
+ GET /api/auth/providers 200 in 12ms (compile: 6ms, render: 6ms)
+ GET /api/auth/csrf 200 in 8ms (compile: 1999µs, render: 6ms)
+[next-auth][error][SIGNIN_OAUTH_ERROR] 
+https://next-auth.js.org/errors#signin_oauth_error client_id is required {
+  error: {
+    message: 'client_id is required',
+    stack: 'TypeError: client_id is required\n' +
+      '    at new BaseClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:1318:19)\n' +
+      '    at new Client (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_openid-client_d15f72b3._.js:2843:13)\n' +
+      '    at openidClient (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:410:20)\n' +
+      '    at getAuthorizationUrl (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1764:51)\n' +
+      '    at Object.signin (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:1846:66)\n' +
+      '    at AuthHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3294:49)\n' +
+      '    at async NextAuthRouteHandler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3501:30)\n' +
+      '    at async NextAuth._args$ (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next-auth_10308b7b._.js:3536:24)\n' +
+      '    at async AppRouteRouteModule.do (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:37866)\n' +
+      '    at async AppRouteRouteModule.handle (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:45156)\n' +
+      '    at async responseGenerator (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12519:38)\n' +
+      '    at async AppRouteRouteModule.handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:1:191938)\n' +
+      '    at async handleResponse (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12582:32)\n' +
+      '    at async Module.handler (/Users/bharathsr/Documents/Projects/ai-usage/.next/dev/server/chunks/node_modules_next_0073c1d9._.js:12635:13)\n' +
+      '    at async DevServer.renderToResponseWithComponentsImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1442:9)\n' +
+      '    at async DevServer.renderPageComponent (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1494:24)\n' +
+      '    at async DevServer.renderToResponseImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1544:32)\n' +
+      '    at async DevServer.pipeImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:1038:25)\n' +
+      '    at async NextNodeServer.handleCatchallRenderRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/next-server.js:395:17)\n' +
+      '    at async DevServer.handleRequestImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/base-server.js:929:17)\n' +
+      '    at async /Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:387:20\n' +
+      '    at async Span.traceAsyncFn (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/trace/trace.js:157:20)\n' +
+      '    at async DevServer.handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/dev/next-dev-server.js:383:24)\n' +
+      '    at async invokeRender (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:248:21)\n' +
+      '    at async handleRequest (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:447:24)\n' +
+      '    at async requestHandlerImpl (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/router-server.js:496:13)\n' +
+      '    at async Server.requestListener (/Users/bharathsr/Documents/Projects/ai-usage/node_modules/next/dist/server/lib/start-server.js:226:13)',
+    name: 'TypeError'
+  },
+  providerId: 'github',
+  message: 'client_id is required'
+}
+ POST /api/auth/signin/github 200 in 7ms (compile: 1170µs, render: 6ms)
+ GET /api/auth/error?error=OAuthSignin 302 in 4ms (compile: 748µs, render: 4ms)
+ GET /api/auth/signin?error=OAuthSignin 302 in 5ms (compile: 779µs, render: 4ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 25ms (compile: 1763µs, render: 23ms)
+ GET /api/auth/session 200 in 8ms (compile: 2ms, render: 5ms)
+  Reload env: .env.local
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 70ms (compile: 53ms, render: 16ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 58ms (compile: 37ms, render: 22ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 45ms (compile: 33ms, render: 12ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 50ms (compile: 38ms, render: 11ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 47ms (compile: 34ms, render: 13ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 54ms (compile: 41ms, render: 13ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 42ms (compile: 32ms, render: 11ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 84ms (compile: 4ms, render: 80ms)
+ GET /api/auth/session 200 in 60ms (compile: 50ms, render: 10ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 23ms (compile: 1377µs, render: 22ms)
+ GET /api/auth/session 200 in 6ms (compile: 1187µs, render: 4ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 18ms (compile: 1250µs, render: 17ms)
+ GET /api/auth/session 200 in 12ms (compile: 4ms, render: 8ms)
+ GET /api/auth/providers 200 in 14ms (compile: 5ms, render: 8ms)
+ GET /api/auth/csrf 200 in 6ms (compile: 1347µs, render: 4ms)
+ POST /api/auth/signin/github 200 in 8ms (compile: 710µs, render: 7ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 40ms (compile: 5ms, render: 35ms)
+ GET /api/auth/session 200 in 11ms (compile: 5ms, render: 7ms)
+ GET /login?callbackUrl=%2F 200 in 28ms (compile: 4ms, render: 24ms)
+ GET /api/auth/session 200 in 7ms (compile: 2ms, render: 5ms)
+ GET /api/auth/providers 200 in 13ms (compile: 6ms, render: 7ms)
+ GET /api/auth/csrf 200 in 10ms (compile: 1839µs, render: 8ms)
+ POST /api/auth/signin/github 200 in 10ms (compile: 3ms, render: 7ms)
+ GET /login?callbackUrl=%2F 200 in 41ms (compile: 4ms, render: 37ms)
+ GET /api/auth/session 200 in 7ms (compile: 1755µs, render: 5ms)
+ GET /api/auth/providers 200 in 13ms (compile: 6ms, render: 7ms)
+ GET /api/auth/csrf 200 in 8ms (compile: 1837µs, render: 6ms)
+ POST /api/auth/signin/github 200 in 6ms (compile: 1232µs, render: 5ms)
+ GET /api/auth/callback/github?code=f15111d0911edf9d551d&state=W0bxEIxEtNRkz-gXaszqNTxHa96VD5mvEYTeVTY6cJY 302 in 2.3s (compile: 6ms, render: 2.2s)
+ GET / 200 in 242ms (compile: 65ms, proxy.ts: 5ms, render: 172ms)
+ GET /api/auth/session 200 in 8ms (compile: 2ms, render: 6ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 69ms (compile: 56ms, render: 13ms)
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F&error=OAuthSignin 200 in 72ms (compile: 58ms, render: 14ms)

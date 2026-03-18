@@ -241,19 +241,22 @@ function OverviewTab({ toolId, claudeData, geminiData, geminiMonitoringData, ope
                 <div className="bg-white/5 rounded-2xl border border-white/10 p-5">
                     <h3 className="text-sm font-semibold mb-4 text-gray-300">Model Capabilities</h3>
                     <div className="space-y-3">
-                        {geminiData.models.slice(0, 5).map(m => (
-                            <div key={m.id} className="flex items-center justify-between">
-                                <span className="text-sm font-mono text-blue-300 truncate">{m.name || m.id.split("/").pop()}</span>
-                                <div className="flex items-center gap-2 shrink-0 ml-3">
-                                    <div className="h-1.5 w-24 bg-white/10 rounded-full overflow-hidden">
-                                        <div className="h-full rounded-full" style={{ width: `${Math.min((m.inputTokenLimit / 2000000) * 100, 100)}%`, background: color }} />
+                        {geminiData.models.slice(0, 5).map(m => {
+                            const maxCtx = Math.max(...geminiData.models.map(x => x.inputTokenLimit), 1);
+                            return (
+                                <div key={m.id} className="flex items-center justify-between">
+                                    <span className="text-sm font-mono text-blue-300 truncate">{m.name || m.id.split("/").pop()}</span>
+                                    <div className="flex items-center gap-2 shrink-0 ml-3">
+                                        <div className="h-1.5 w-24 bg-white/10 rounded-full overflow-hidden">
+                                            <div className="h-full rounded-full" style={{ width: `${(m.inputTokenLimit / maxCtx) * 100}%`, background: color }} />
+                                        </div>
+                                        <span className="text-xs text-gray-400 font-mono w-14 text-right">
+                                            {m.inputTokenLimit >= 1000000 ? `${(m.inputTokenLimit / 1000000).toFixed(1)}M` : `${(m.inputTokenLimit / 1000).toFixed(0)}k`}
+                                        </span>
                                     </div>
-                                    <span className="text-xs text-gray-400 font-mono w-14 text-right">
-                                        {m.inputTokenLimit >= 1000000 ? `${(m.inputTokenLimit / 1000000).toFixed(1)}M` : `${(m.inputTokenLimit / 1000).toFixed(0)}k`}
-                                    </span>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
             )}
@@ -487,6 +490,7 @@ function ModelsTab({ toolId, claudeData, geminiData, openaiData }: {
     // Gemini
     if (!geminiData) return <NotConnectedMsg tool="Gemini" />;
     const color = TOOL_META.gemini.color;
+    const maxCtx = Math.max(...geminiData.models.map(m => m.inputTokenLimit), 1);
     return (
         <div className="bg-white/5 rounded-2xl border border-white/10 p-5">
             <h3 className="text-sm font-semibold mb-1 text-gray-300">Available Gemini Models</h3>
@@ -504,7 +508,7 @@ function ModelsTab({ toolId, claudeData, geminiData, openaiData }: {
                                 <span className="text-xs text-gray-500 font-mono">{ctxLabel} ctx</span>
                             </div>
                             <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min((m.inputTokenLimit / 2000000) * 100, 100)}%` }}
+                                <motion.div initial={{ width: 0 }} animate={{ width: `${(m.inputTokenLimit / maxCtx) * 100}%` }}
                                     transition={{ delay: idx * 0.05, duration: 0.5, ease: "easeOut" }}
                                     className="h-full rounded-full" style={{ backgroundColor: color }} />
                             </div>

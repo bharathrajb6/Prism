@@ -38,6 +38,7 @@ export interface IntegrationStore {
     gemini: GeminiData | null;
     geminiMonitoring: GeminiMonitoringData | null;
     openai: OpenAIData | null;
+    isRefetching?: boolean;
 }
 
 // ─── Storage helpers ──────────────────────────────────────────────────────────
@@ -77,14 +78,16 @@ export function readAll(email: string): IntegrationStore {
 
 export function disconnectTool(email: string, tool: ToolKey | "geminiMonitoring"): void {
     if (typeof window === "undefined" || !email) return;
+    const keyString = tool === "geminiMonitoring" ? "gemini-monitoring" : tool;
     localStorage.removeItem(`${email}_${KEYS[tool as ToolKey]}`);
-    localStorage.removeItem(`${email}_prism_${tool === "geminiMonitoring" ? "gemini-monitoring" : tool}_key`);
+    localStorage.removeItem(`${email}_prism_${keyString}_key`);
+    localStorage.removeItem(`${email}_prism_${keyString}_secret`);
     window.dispatchEvent(new Event("prism-storage-changed"));
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export function useIntegrationData(): IntegrationStore & { refresh: () => void } {
+export function useIntegrationData(): IntegrationStore & { refresh: () => void; refetchAll: () => Promise<void> } {
     const { data: session } = useSession();
     const email = session?.user?.email || "";
 
@@ -98,6 +101,47 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void }
     const refresh = useCallback(() => {
         setStore(readAll(email));
     }, [email]);
+
+    const refetchAll = useCallback(async () => {
+        if (!email) return;
+        setStore(prev => ({ ...prev, isRefetching: true }));
+        try {
+            const promises = [];
+
+            const claudeSecretRaw = localStorage.getItem(`${email}_prism_claude_secret`);
+            if (claudeSecretRaw) {
+                const secret = JSON.parse(claudeSecretRaw);
+                promises.push(fetch("/api/integrations/claude", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
+                    .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "claude", d, secret); }));
+            }
+
+            const geminiSecretRaw = localStorage.getItem(`${email}_prism_gemini_secret`);
+            if (geminiSecretRaw) {
+                const secret = JSON.parse(geminiSecretRaw);
+                promises.push(fetch("/api/integrations/gemini", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
+                    .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "gemini", d, secret); }));
+            }
+
+            const geminiMonSecretRaw = localStorage.getItem(`${email}_prism_gemini-monitoring_secret`);
+            if (geminiMonSecretRaw) {
+                const secret = JSON.parse(geminiMonSecretRaw);
+                promises.push(fetch("/api/integrations/gemini-monitoring", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
+                    .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "gemini-monitoring", d, secret); }));
+            }
+
+            const openaiSecretRaw = localStorage.getItem(`${email}_prism_openai_secret`);
+            if (openaiSecretRaw) {
+                const secret = JSON.parse(openaiSecretRaw);
+                promises.push(fetch("/api/integrations/openai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
+                    .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "openai", d, secret); }));
+            }
+
+            await Promise.allSettled(promises);
+        } finally {
+            refresh();
+            setStore(prev => ({ ...prev, isRefetching: false }));
+        }
+    }, [email, refresh]);
 
     useEffect(() => {
         if (!email) return;
@@ -119,13 +163,16 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void }
         };
     }, [refresh, email]);
 
-    return { ...store, refresh };
+    return { ...store, refresh, refetchAll };
 }
 
 // ─── persist helper (fires custom event so Dashboard re-reads immediately) ────
 
-export function persistIntegration(email: string, key: string, data: unknown): void {
+export function persistIntegration(email: string, key: string, data: unknown, secret?: unknown): void {
     if (typeof window === "undefined" || !email) return;
+    if (secret) {
+        localStorage.setItem(`${email}_prism_${key}_secret`, JSON.stringify(secret));
+    }
     localStorage.setItem(`${email}_prism_${key}_key`, typeof data === "string" ? data : "");
     localStorage.setItem(`${email}_prism_${key}_data`, JSON.stringify(data));
     window.dispatchEvent(new Event("prism-storage-changed"));
