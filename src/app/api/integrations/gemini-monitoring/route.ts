@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         reqCountUrl.searchParams.set('interval.startTime', startTime);
         reqCountUrl.searchParams.set('interval.endTime', endTime);
         reqCountUrl.searchParams.set('aggregation.alignmentPeriod', '86400s');
-        reqCountUrl.searchParams.set('aggregation.perSeriesAligner', 'ALIGN_RATE');
+        reqCountUrl.searchParams.set('aggregation.perSeriesAligner', 'ALIGN_SUM');
         reqCountUrl.searchParams.set('aggregation.crossSeriesReducer', 'REDUCE_SUM');
         reqCountUrl.searchParams.set('aggregation.groupByFields', 'metric.labels.method');
 
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
         tokenUrl.searchParams.set('interval.startTime', startTime);
         tokenUrl.searchParams.set('interval.endTime', endTime);
         tokenUrl.searchParams.set('aggregation.alignmentPeriod', '86400s');
-        tokenUrl.searchParams.set('aggregation.perSeriesAligner', 'ALIGN_RATE');
+        tokenUrl.searchParams.set('aggregation.perSeriesAligner', 'ALIGN_SUM');
 
         const tokenRes = await fetch(tokenUrl.toString(), {
             headers: { Authorization: `Bearer ${accessToken}` },

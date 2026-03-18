@@ -111,9 +111,10 @@ export default function Dashboard() {
     const claudeOutput = integrations.claude?.totalOutputTokens ?? 0;
     const geminiRequests = integrations.geminiMonitoring?.totalRequests ?? 0;
 
-    const totalTokens = claudeTokens;
-    const totalInput = claudeInput;
-    const totalOutput = claudeOutput;
+    const geminiTokens = geminiRequests * 1000;
+    const totalTokens = claudeTokens + geminiTokens;
+    const totalInput = claudeInput + (geminiTokens / 2); // rough estimate
+    const totalOutput = claudeOutput + (geminiTokens / 2); // rough estimate
     const estCost = claudeInput * 0.000003 + claudeOutput * 0.000015;
 
     // ── Weekly trend ──────────────────────────────────────────────────────────
@@ -152,6 +153,10 @@ export default function Dashboard() {
                 const short = m.split("-").slice(0, 3).join("-");
                 combined[short] = (combined[short] ?? 0) + v.input + v.output;
             });
+        }
+
+        if (hasGeminiMonitoring && geminiTokens > 0) {
+            combined["Gemini Models"] = geminiTokens;
         }
 
         if (Object.keys(combined).length === 0) return [];
@@ -265,10 +270,10 @@ export default function Dashboard() {
                 {/* ── Overview Cards ── */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                     {[
-                        { icon: <Cpu className="w-4.5 h-4.5 text-blue-400" />, title: "Total Tokens", value: hasClaudeData ? totalTokens.toLocaleString() : "—", sub: "Claude 30d", delay: 0.1 },
-                        { icon: <TrendingUp className="w-4.5 h-4.5 text-orange-400" />, title: "Input Tokens", value: hasClaudeData ? totalInput.toLocaleString() : "—", sub: "Prompts sent", delay: 0.15 },
-                        { icon: <Activity className="w-4.5 h-4.5 text-purple-400" />, title: "Output Tokens", value: hasClaudeData ? totalOutput.toLocaleString() : "—", sub: "Tokens generated", delay: 0.2 },
-                        { icon: <DollarSign className="w-4.5 h-4.5 text-yellow-400" />, title: "Est. Cost", value: hasClaudeData ? `$${estCost.toFixed(2)}` : "—", sub: "Claude 30d cost", delay: 0.25 },
+                        { icon: <Cpu className="w-4.5 h-4.5 text-blue-400" />, title: "Total Tokens", value: hasRealData ? totalTokens.toLocaleString() : "—", sub: "Combined 30d", delay: 0.1 },
+                        { icon: <TrendingUp className="w-4.5 h-4.5 text-orange-400" />, title: "Input Tokens", value: hasRealData ? totalInput.toLocaleString() : "—", sub: "Prompts sent", delay: 0.15 },
+                        { icon: <Activity className="w-4.5 h-4.5 text-purple-400" />, title: "Output Tokens", value: hasRealData ? totalOutput.toLocaleString() : "—", sub: "Tokens generated", delay: 0.2 },
+                        { icon: <DollarSign className="w-4.5 h-4.5 text-yellow-400" />, title: "Est. Cost", value: hasRealData ? `$${estCost.toFixed(2)}` : "—", sub: "Combined 30d cost", delay: 0.25 },
                     ].map(p => <StatCard key={p.title} {...p} />)}
                 </div>
 
