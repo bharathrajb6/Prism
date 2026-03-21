@@ -17,8 +17,12 @@
 | **ChatGPT Integration** | Model availability and account tier via standard OpenAI API key |
 | **Tool Detail Modals** | Deep-dive per-tool popups with Overview, Usage, and Models tabs |
 | **Connect Page** | Guided setup for each integration with status indicators and Disconnect buttons |
-| **Persistent State** | Connection data survives page refreshes (stored in browser `localStorage`) |
-| **Privacy-first** | API keys are **never stored** — only response data (model lists, token counts) is persisted |
+| **Export Capabilities** | Download your data arrays seamlessly as structured `.csv` or visual `.pdf` reports |
+| **Background Refresh** | Sync with external APIs on-the-fly without needing to disconnect and reconnect your tools |
+| **Theme Toggling** | Fully responsive Dark/Light mode design |
+| **Secure Authentication** | NextAuth integrations (Google/GitHub) protecting API Proxy paths with automatic 48-hour idle session expiration |
+| **Persistent State** | Connection data & keys survive page refreshes natively (stored securely in browser `localStorage`) |
+| **Database-Free Privacy** | API secrets are safely maintained inside your own browser boundaries — our server never permanently records your API keys! |
 
 ---
 
@@ -75,7 +79,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🔑 Connecting Your AI Tools
 
-Navigate to **Connect** (top nav) and paste in your keys. All keys are sent only to your own Next.js backend and are **never persisted**.
+Log into Prism via GitHub or Google. Navigate to **Connect** (top nav) and paste your keys. Your API keys are strictly saved to your browser's local cache and are **never persisted in any centralized database**.
 
 ### Claude (Anthropic)
 
@@ -132,12 +136,12 @@ Uses your standard **API key** (`sk-...`) to validate the key and list accessibl
 
 | What | Is it stored? |
 |---|---|
-| API keys | ❌ **Never** — only live in React state & the HTTP request |
+| API keys | ✅ Securely in browser `localStorage` (required for background refresh) |
 | Model lists | ✅ `localStorage` — cleared on Disconnect |
 | Token counts | ✅ `localStorage` — cleared on Disconnect |
-| Any server-side DB | ❌ No backend database, no server-side storage |
+| Any server-side DB | ❌ No backend database, no server-side storage! |
 
-All backend routes (`/api/integrations/*`) are **stateless** — they receive the key, call the provider API, and return the result. Nothing is written to disk.
+All backend routes (`/api/integrations/*`) act as stateless proxies locked behind NextAuth middleware. They receive your key via POST requests, call the respective provider API, and return the result. Absolutely nothing is logged or written to server disks.
 
 ---
 
@@ -166,6 +170,7 @@ npm run build
 | Charts | [Recharts](https://recharts.org) |
 | Animations | [Framer Motion](https://framer.motion.com) |
 | Icons | [Lucide React](https://lucide.dev) |
+| Auth | [NextAuth.js](https://next-auth.js.org) (JWT Strategy) |
 | Storage | Browser `localStorage` (client-only, no DB) |
 
 ---
@@ -173,7 +178,7 @@ npm run build
 ## 🗺 Roadmap
 
 - [ ] Cursor / Windsurf usage when APIs become available
-- [ ] Export usage report as CSV / PDF
+- [x] Export usage report as CSV / PDF
 - [ ] Multi-account support per provider
 - [ ] Cost alerts / spending thresholds
-- [ ] Dark / light theme toggle
+- [x] Dark / light theme toggle
