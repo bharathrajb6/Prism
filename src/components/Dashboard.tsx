@@ -42,7 +42,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-center min-h-[80vh] text-indigo-300">
                 <motion.div className="text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                     <div className="w-12 h-12 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin mx-auto mb-4" />
-                    <p className="text-sm text-gray-400">Loading...</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Loading...</p>
                 </motion.div>
             </div>
         );
@@ -58,7 +58,7 @@ export default function Dashboard() {
                     <h1 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400">
                         Prism
                     </h1>
-                    <p className="text-gray-400 mt-2 text-sm">Your AI usage, unified in one view</p>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">Your AI usage, unified in one view</p>
                 </motion.div>
 
                 {/* Empty CTA */}
@@ -66,19 +66,19 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                     className="flex flex-col items-center justify-center min-h-[50vh] text-center gap-6"
                 >
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-gray-900/10 dark:border-white/10 flex items-center justify-center">
                         <PlugZap className="w-10 h-10 text-violet-400" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-white mb-2">No tools connected yet</h2>
-                        <p className="text-gray-400 text-sm max-w-md">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools connected yet</h2>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md">
                             Connect Claude, Gemini, or ChatGPT to start seeing your real AI usage — tokens, costs, model breakdown, and trends.
                         </p>
                     </div>
                     <Link href="/connect">
                         <motion.div
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white text-sm"
+                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-gray-900 dark:text-white text-sm"
                             style={{ background: "linear-gradient(135deg, #7c3aed, #ec4899)" }}
                         >
                             Connect Your AI Tools <ExternalLink className="w-4 h-4" />
@@ -92,10 +92,10 @@ export default function Dashboard() {
                             { icon: <DollarSign className="w-5 h-5 text-yellow-400" />, title: "Cost Estimates", desc: "Blended cost across providers" },
                             { icon: <Bot className="w-5 h-5 text-purple-400" />, title: "Model Mix", desc: "Which models you use most" },
                         ].map(item => (
-                            <div key={item.title} className="bg-white/5 border border-white/10 rounded-xl p-4 text-left">
-                                <div className="p-2 bg-white/5 rounded-lg w-fit mb-3">{item.icon}</div>
-                                <p className="text-sm font-semibold text-white">{item.title}</p>
-                                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                            <div key={item.title} className="bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 rounded-xl p-4 text-left">
+                                <div className="p-2 bg-gray-900/5 dark:bg-white/5 rounded-lg w-fit mb-3">{item.icon}</div>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{item.title}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -255,24 +255,104 @@ export default function Dashboard() {
                         <h1 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400">
                             Prism
                         </h1>
-                        <p className="text-gray-400 mt-2 text-sm">Your AI usage, unified in one view</p>
+                        <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm dark:text-gray-600 dark:text-gray-400">Your AI usage, unified in one view</p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                        {hasRealData && (
+                            <div className="flex items-center gap-2 mr-2">
+                                <button
+                                    onClick={() => {
+                                        const rows = [
+                                            ["Metric", "Value"],
+                                            ["Total Tokens", totalTokens],
+                                            ["Input Tokens", totalInput],
+                                            ["Output Tokens", totalOutput],
+                                            ["Est Cost", `$${estCost.toFixed(2)}`],
+                                            [],
+                                            ["Provider", "Tokens Used"],
+                                            ...activeBars.map(p => [
+                                                p,
+                                                weeklyTrend.reduce((sum, d) => sum + (Number(d[p]) || 0), 0)
+                                            ]),
+                                            [],
+                                            ["Model", "Share %"],
+                                            ...models.map(m => [m.name, m.usage + "%"])
+                                        ];
+
+                                        const csvContent = "data:text/csv;charset=utf-8,"
+                                            + rows.map(e => e.join(",")).join("\n");
+                                        const encodedUri = encodeURI(csvContent);
+                                        const link = document.createElement("a");
+                                        link.setAttribute("href", encodedUri);
+                                        link.setAttribute("download", `prism-usage-${new Date().toISOString().split("T")[0]}.csv`);
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }}
+                                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-gray-900/5 dark:bg-white/5 hover:bg-gray-900/10 dark:bg-white/10 border border-gray-900/10 dark:border-white/10 text-gray-900 dark:text-white transition-all flex items-center gap-2"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                    CSV
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        import("jspdf").then(({ default: jsPDF }) => {
+                                            import("jspdf-autotable").then(({ default: autoTable }) => {
+                                                const doc = new jsPDF() as any;
+
+                                                doc.setFontSize(20);
+                                                doc.text("Prism AI Usage Report", 14, 22);
+
+                                                doc.setFontSize(10);
+                                                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+
+                                                autoTable(doc, {
+                                                    startY: 40,
+                                                    head: [["Metric", "Value"]],
+                                                    body: [
+                                                        ["Total Tokens (30d)", totalTokens.toLocaleString()],
+                                                        ["Input Tokens", totalInput.toLocaleString()],
+                                                        ["Output Tokens", totalOutput.toLocaleString()],
+                                                        ["Est Cost", `$${estCost.toFixed(2)}`],
+                                                    ],
+                                                });
+
+                                                autoTable(doc, {
+                                                    startY: doc.lastAutoTable.finalY + 10,
+                                                    head: [["Provider", "Tokens Used (7d API)"]],
+                                                    body: activeBars.map(p => [
+                                                        p,
+                                                        weeklyTrend.reduce((sum, d) => sum + (Number(d[p]) || 0), 0).toLocaleString()
+                                                    ]),
+                                                });
+
+                                                doc.save(`prism-usage-${new Date().toISOString().split("T")[0]}.pdf`);
+                                            });
+                                        });
+                                    }}
+                                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-gray-900/5 dark:bg-white/5 hover:bg-gray-900/10 dark:bg-white/10 border border-gray-900/10 dark:border-white/10 text-gray-900 dark:text-white transition-all flex items-center gap-2"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                    PDF
+                                </button>
+                            </div>
+                        )}
                         <button
+
                             onClick={() => integrations.refetchAll()}
                             disabled={integrations.isRefetching}
-                            className={`p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all ${integrations.isRefetching ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`p-2 rounded-xl bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white hover:bg-gray-900/10 dark:bg-white/10 transition-all ${integrations.isRefetching ? 'opacity-50 cursor-not-allowed' : ''}`}
                             title="Refresh API Data"
                         >
                             <RefreshCw className={`w-4 h-4 ${integrations.isRefetching ? 'animate-spin' : ''}`} />
                         </button>
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-900/30 border border-green-500/30 w-fit">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-100 dark:bg-green-900/30 border border-green-500/30 w-fit">
                             <div className="relative flex h-2.5 w-2.5">
                                 <span className={`absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 ${integrations.isRefetching ? '' : 'animate-ping'}`} />
                                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                             </div>
-                            <span className="text-sm font-medium text-green-400">
+                            <span className="text-sm font-medium text-green-600 dark:text-green-400">
                                 {integrations.isRefetching ? "Syncing..." : "Live Data"}
                             </span>
                         </div>
@@ -294,26 +374,26 @@ export default function Dashboard() {
 
                     {/* Bar chart */}
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 lg:col-span-2 relative overflow-hidden group"
+                        className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-2xl p-6 lg:col-span-2 relative overflow-hidden group"
                     >
                         <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                         <h2 className="text-base font-semibold mb-1 flex items-center gap-2">
                             <Activity className="w-4 h-4 text-indigo-400" />
                             7-Day Token Activity
                         </h2>
-                        <p className="text-xs text-gray-500 mb-5">Real usage across connected providers</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-5">Real usage across connected providers</p>
                         <div className="h-64 w-full relative z-10">
                             {weeklyTrend.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={weeklyTrend} margin={{ top: 5, right: 5, left: -28, bottom: 0 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff12" vertical={false} />
-                                        <XAxis dataKey="day" stroke="#ffffff60" fontSize={11} tickLine={false} axisLine={false} />
-                                        <YAxis stroke="#ffffff60" fontSize={11} tickLine={false} axisLine={false}
+                                        <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+                                        <XAxis dataKey="day" stroke="var(--chart-axis)" fontSize={11} tickLine={false} axisLine={false} />
+                                        <YAxis stroke="var(--chart-axis)" fontSize={11} tickLine={false} axisLine={false}
                                             tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)} />
                                         <Tooltip
-                                            cursor={{ fill: "#ffffff08" }}
-                                            contentStyle={{ backgroundColor: "#111827f0", borderColor: "#ffffff20", borderRadius: "12px" }}
-                                            itemStyle={{ color: "#fff" }}
+                                            cursor={{ fill: "var(--chart-grid)" }}
+                                            contentStyle={{ backgroundColor: "var(--chart-tooltip-bg)", borderColor: "var(--chart-tooltip-border)", borderRadius: "12px" }}
+                                            itemStyle={{ color: "var(--chart-tooltip-color)" }}
                                             formatter={(v: number | undefined) => (v ?? 0).toLocaleString()}
                                         />
                                         {activeBars.map((provider, i) => (
@@ -335,7 +415,7 @@ export default function Dashboard() {
                         {weeklyTrend.length > 0 && (
                             <div className="flex flex-wrap gap-4 mt-3 relative z-10">
                                 {activeBars.map(p => (
-                                    <div key={p} className="flex items-center gap-1.5 text-xs text-gray-400">
+                                    <div key={p} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
                                         <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: PROVIDER_COLORS[p] }} />
                                         {p}
                                     </div>
@@ -346,13 +426,13 @@ export default function Dashboard() {
 
                     {/* Pie chart */}
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}
-                        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 relative overflow-hidden"
+                        className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden"
                     >
                         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none rounded-b-2xl" />
                         <h2 className="text-base font-semibold mb-1 flex items-center gap-2">
                             <Bot className="w-4 h-4 text-blue-400" /> LLM Mix
                         </h2>
-                        <p className="text-xs text-gray-500 mb-4">Combined model token share</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">Combined model token share</p>
                         <div className="h-48 w-full relative z-10">
                             {models.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
@@ -367,8 +447,8 @@ export default function Dashboard() {
                                             ))}
                                         </Pie>
                                         <Tooltip
-                                            contentStyle={{ backgroundColor: "#111827f0", borderColor: "#ffffff20", borderRadius: "12px" }}
-                                            itemStyle={{ color: "#fff" }}
+                                            contentStyle={{ backgroundColor: "var(--chart-tooltip-bg)", borderColor: "var(--chart-tooltip-border)", borderRadius: "12px" }}
+                                            itemStyle={{ color: "var(--chart-tooltip-color)" }}
                                             formatter={(v: number | undefined) => `${v ?? 0}%`}
                                         />
                                     </PieChart>
@@ -386,9 +466,9 @@ export default function Dashboard() {
                                     <div key={m.name} className="flex items-center justify-between text-xs">
                                         <div className="flex items-center gap-2 truncate">
                                             <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: MODEL_COLORS[idx % MODEL_COLORS.length] }} />
-                                            <span className="text-gray-300 truncate font-mono">{m.name}</span>
+                                            <span className="text-gray-700 dark:text-gray-300 truncate font-mono">{m.name}</span>
                                         </div>
-                                        <span className="text-gray-400 ml-2 shrink-0">{m.usage}%</span>
+                                        <span className="text-gray-600 dark:text-gray-400 ml-2 shrink-0">{m.usage}%</span>
                                     </div>
                                 ))}
                             </div>
@@ -398,13 +478,13 @@ export default function Dashboard() {
 
                 {/* ── Integrations List ── */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                    className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
+                    className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-2xl p-6"
                 >
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-base font-semibold flex items-center gap-2">
                             <Code2 className="w-4 h-4 text-teal-400" /> Integrations
                         </h2>
-                        <Link href="/connect" className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors">
+                        <Link href="/connect" className="text-xs text-blue-400 hover:text-blue-700 dark:text-blue-300 flex items-center gap-1 transition-colors">
                             Manage <ArrowUpRight className="w-3 h-3" />
                         </Link>
                     </div>
@@ -416,7 +496,7 @@ export default function Dashboard() {
                                 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.65 + idx * 0.08 }}
                                 onClick={() => tool.clickable && setOpenTool(tool.clickable as ToolId)}
-                                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border transition-all ${tool.clickable ? "cursor-pointer hover:bg-white/8 hover:border-white/15" : ""
+                                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border transition-all ${tool.clickable ? "cursor-pointer hover:bg-gray-900/10 dark:bg-white/8 hover:border-gray-900/15 dark:border-white/15" : ""
                                     }`}
                                 style={{
                                     backgroundColor: tool.connected ? `${tool.color}0d` : "rgba(255,255,255,0.03)",
@@ -432,17 +512,17 @@ export default function Dashboard() {
                                         <div className="flex items-center gap-2">
                                             <h3 className="font-semibold">{tool.name}</h3>
                                             <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${tool.connected
-                                                ? "bg-green-900/40 text-green-300 border-green-700/50"
-                                                : "bg-gray-800/60 text-gray-500 border-gray-700/50"
+                                                ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700/50"
+                                                : "bg-gray-200 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-700/50"
                                                 }`}>
                                                 {tool.connected ? "● Connected" : "○ Not Connected"}
                                             </span>
                                         </div>
-                                        <p className="text-xs text-gray-500 mt-0.5">{tool.company}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{tool.company}</p>
                                         {tool.models.length > 0 && (
                                             <div className="flex flex-wrap gap-1.5 mt-2">
                                                 {tool.models.slice(0, 3).map(m => (
-                                                    <span key={m} className="text-xs px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-400 font-mono">{m}</span>
+                                                    <span key={m} className="text-xs px-2 py-0.5 rounded-full bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 text-gray-600 dark:text-gray-400 font-mono">{m}</span>
                                                 ))}
                                             </div>
                                         )}
@@ -454,20 +534,20 @@ export default function Dashboard() {
                                         <div className="flex gap-6 sm:gap-8">
                                             {tool.stats.map(s => (
                                                 <div key={s.label} className="text-right">
-                                                    <p className="text-xs text-gray-500">{s.label}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">{s.label}</p>
                                                     <p className="font-mono text-sm font-semibold mt-0.5" style={{ color: tool.color }}>{s.value}</p>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
                                         <Link href="/connect" onClick={e => e.stopPropagation()}>
-                                            <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
+                                            <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-gray-900/10 dark:border-white/10 bg-gray-900/5 dark:bg-white/5 hover:bg-gray-900/10 dark:bg-white/10 transition-colors">
                                                 Connect <ArrowUpRight className="w-3 h-3" />
                                             </div>
                                         </Link>
                                     )}
                                     {tool.clickable && (
-                                        <div className="hidden sm:flex items-center text-xs text-gray-600 hover:text-gray-400 gap-1 transition-colors">
+                                        <div className="hidden sm:flex items-center text-xs text-gray-600 hover:text-gray-600 dark:text-gray-400 gap-1 transition-colors">
                                             Details <ArrowUpRight className="w-3 h-3" />
                                         </div>
                                     )}
@@ -499,16 +579,15 @@ function StatCard({ icon, title, value, sub, delay }: {
         <motion.div
             initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay, duration: 0.4 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:bg-white/8 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group"
+            className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-2xl p-5 hover:bg-gray-900/10 dark:bg-white/8 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group"
         >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-gray-900/5 dark:from-white/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex justify-between items-start mb-3">
-                <div className="p-2.5 bg-white/5 rounded-xl border border-white/10">{icon}</div>
-                <span className="text-xs text-green-400 bg-green-900/30 border border-green-700/40 px-2 py-0.5 rounded-full">Live</span>
+                <div className="p-2.5 bg-gray-900/5 dark:bg-white/5 rounded-xl border border-gray-900/10 dark:border-white/10">{icon}</div>
+                <span className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700/40 px-2 py-0.5 rounded-full">Live</span>
             </div>
-            <h3 className="text-gray-400 text-xs font-medium mb-1">{title}</h3>
-            <p className="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{value}</p>
-            <p className="text-xs text-gray-600 mt-1.5">{sub}</p>
+            <h3 className="text-gray-600 dark:text-gray-400 text-xs font-medium mb-1">{title}</h3>
+            <p className="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 dark:from-white dark:to-gray-400">{value}</p>            <p className="text-xs text-gray-600 mt-1.5">{sub}</p>
         </motion.div>
     );
 }

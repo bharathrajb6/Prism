@@ -99,7 +99,7 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void; 
     });
 
     const refresh = useCallback(() => {
-        setStore(readAll(email));
+        setStore(prev => ({ ...readAll(email), isRefetching: prev.isRefetching }));
     }, [email]);
 
     const refetchAll = useCallback(async () => {

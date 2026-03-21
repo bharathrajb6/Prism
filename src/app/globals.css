@@ -1,7 +1,24 @@
 @import "tailwindcss";
 
-body {
-  background: linear-gradient(135deg, #0f0c29, #1a1a4e 40%, #0a0a1a);
-  min-height: 100vh;
-  color: white;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-chart-grid: var(--chart-grid);
+    --color-chart-axis: var(--chart-axis);
+}
+
+:root {
+    --chart-grid: #11182715;
+    --chart-axis: #11182760;
+    --chart-tooltip-bg: #ffffff;
+    --chart-tooltip-border: rgba(0, 0, 0, 0.1);
+    --chart-tooltip-color: #111827;
+}
+
+.dark {
+    --chart-grid: #ffffff12;
+    --chart-axis: #ffffff60;
+    --chart-tooltip-bg: #111827f0;
+    --chart-tooltip-border: #ffffff20;
+    --chart-tooltip-color: #ffffff;
 }

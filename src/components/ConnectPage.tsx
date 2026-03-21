@@ -184,7 +184,7 @@ export default function ConnectPage() {
                 <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-2">
                     Connect Your AI Tools
                 </h1>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
                     Paste your API keys below. They are sent only to your own backend and stored in your browser&apos;s localStorage.
                 </p>
             </motion.div>
@@ -309,18 +309,18 @@ export default function ConnectPage() {
                     {states["gemini-monitoring"].status !== "success" && (
                         <div className="space-y-3">
                             <div>
-                                <label className="block text-xs font-medium text-gray-400 mb-1.5">GCP Project ID</label>
+                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">GCP Project ID</label>
                                 <input
                                     type="text"
                                     placeholder="my-project-123456"
                                     value={gcpProjectId}
                                     onChange={e => setGcpProjectId(e.target.value)}
                                     disabled={states["gemini-monitoring"].status === "loading"}
-                                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono disabled:opacity-50"
+                                    className="w-full bg-white/70 dark:bg-black/30 border border-gray-900/10 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono disabled:opacity-50"
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-400 mb-1.5 flex items-center gap-1.5">
+                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5 flex items-center gap-1.5">
                                     <FileJson className="w-3.5 h-3.5" /> Service Account JSON
                                 </label>
                                 <textarea
@@ -329,10 +329,10 @@ export default function ConnectPage() {
                                     onChange={e => setServiceAccountJson(e.target.value)}
                                     rows={4}
                                     disabled={states["gemini-monitoring"].status === "loading"}
-                                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono resize-none disabled:opacity-50"
+                                    className="w-full bg-white/70 dark:bg-black/30 border border-gray-900/10 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono resize-none disabled:opacity-50"
                                 />
                                 <p className="text-xs text-gray-600 mt-1">
-                                    Enable the <strong className="text-gray-400">Cloud Monitoring API</strong> on the project and grant the service account <strong className="text-gray-400">Monitoring Viewer</strong> role.
+                                    Enable the <strong className="text-gray-600 dark:text-gray-400">Cloud Monitoring API</strong> on the project and grant the service account <strong className="text-gray-600 dark:text-gray-400">Monitoring Viewer</strong> role.
                                 </p>
                             </div>
                             <ConnectButton
@@ -368,19 +368,19 @@ function IntegrationCard({
     children: React.ReactNode;
 }) {
     const statusConfig: Record<ConnectStatus, { label: string; cls: string }> = {
-        idle: { label: "Not Connected", cls: "bg-gray-800 text-gray-400 border-gray-700" },
-        loading: { label: "Connecting…", cls: "bg-blue-900/50 text-blue-300 border-blue-700 animate-pulse" },
-        success: { label: "✓ Live", cls: "bg-green-900/50 text-green-300 border-green-700" },
-        error: { label: "✗ Failed", cls: "bg-red-900/50 text-red-300 border-red-700" },
+        idle: { label: "Not Connected", cls: "bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-700" },
+        loading: { label: "Connecting…", cls: "bg-blue-900/50 text-blue-700 dark:text-blue-300 border-blue-700 animate-pulse" },
+        success: { label: "✓ Live", cls: "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700" },
+        error: { label: "✗ Failed", cls: "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 border-red-700" },
     };
     const { label, cls } = statusConfig[status];
 
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden"
+            className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-2xl overflow-hidden"
         >
-            <div className="p-6 border-b border-white/5">
+            <div className="p-6 border-b border-gray-900/5 dark:border-white/5">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                         <div
@@ -391,7 +391,7 @@ function IntegrationCard({
                         </div>
                         <div>
                             <h2 className="text-lg font-bold">{name}</h2>
-                            <p className="text-xs text-gray-500">{company}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{company}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -399,7 +399,7 @@ function IntegrationCard({
                         {onDisconnect && (
                             <button
                                 onClick={onDisconnect}
-                                className="flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border border-red-700/50 bg-red-900/30 text-red-400 hover:bg-red-900/50 hover:border-red-600 transition-all"
+                                className="flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border border-red-300 dark:border-red-700/50 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:bg-red-900/50 hover:border-red-400 dark:hover:border-red-600 transition-all"
                                 title="Disconnect and clear stored data"
                             >
                                 <Unplug className="w-3 h-3" />
@@ -408,9 +408,9 @@ function IntegrationCard({
                         )}
                     </div>
                 </div>
-                <p className="text-sm text-gray-400 mt-3">{description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">{description}</p>
                 <a href={docUrl} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs mt-2 text-blue-400 hover:text-blue-300 transition-colors">
+                    className="inline-flex items-center gap-1 text-xs mt-2 text-blue-400 hover:text-blue-700 dark:text-blue-300 transition-colors">
                     <ExternalLink className="w-3 h-3" />{docLabel}
                 </a>
             </div>
@@ -428,7 +428,7 @@ function SecretInput({
 }) {
     return (
         <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5 flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5" />{label}
             </label>
             <div className="relative">
@@ -438,10 +438,10 @@ function SecretInput({
                     value={value}
                     onChange={e => onChange(e.target.value)}
                     disabled={disabled}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono pr-10 disabled:opacity-50"
+                    className="w-full bg-white/70 dark:bg-black/30 border border-gray-900/10 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-all font-mono pr-10 disabled:opacity-50"
                 />
                 <button type="button" onClick={onToggle}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:text-gray-300 transition-colors">
                     {visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
             </div>
@@ -477,7 +477,7 @@ function FeedbackPanel({ state }: { state: IntegrationResult }) {
                 <motion.div
                     initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex items-start gap-2 text-sm text-red-400 bg-red-900/20 border border-red-500/20 rounded-xl p-3"
+                    className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/20 rounded-xl p-3"
                 >
                     <X className="w-4 h-4 mt-0.5 shrink-0" />
                     <span>{state.error}</span>
@@ -499,23 +499,23 @@ function ClaudeResult({ data }: { data: Record<string, unknown> }) {
     const maxVal = Math.max(...last7.map(d => d.total), 1);
 
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pt-2 border-t border-white/5">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pt-2 border-t border-gray-900/5 dark:border-white/5">
             <div className="grid grid-cols-3 gap-3 text-sm">
                 {[
                     { l: "Total Tokens (30d)", v: totalTokens.toLocaleString() },
                     { l: "Input Tokens", v: totalInput.toLocaleString() },
                     { l: "Output Tokens", v: totalOutput.toLocaleString() },
                 ].map(s => (
-                    <div key={s.l} className="bg-black/30 border border-white/5 rounded-xl p-3">
-                        <p className="text-gray-500 text-xs mb-1">{s.l}</p>
+                    <div key={s.l} className="bg-white/70 dark:bg-black/30 border border-gray-900/5 dark:border-white/5 rounded-xl p-3">
+                        <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">{s.l}</p>
                         <p className="font-mono font-bold text-orange-300 text-base">{s.v}</p>
                     </div>
                 ))}
             </div>
             {last7.length > 0 && (
                 <div>
-                    <p className="text-xs text-gray-500 mb-2">Daily tokens — last 7 days</p>
-                    <div className="flex items-end gap-1 h-14 bg-black/30 rounded-xl px-3 py-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Daily tokens — last 7 days</p>
+                    <div className="flex items-end gap-1 h-14 bg-white/70 dark:bg-black/30 rounded-xl px-3 py-2">
                         {last7.map((d, i) => (
                             <div key={i} className="flex-1 flex flex-col justify-end">
                                 <div className="w-full rounded-sm bg-orange-500/70 hover:bg-orange-400 transition-colors"
@@ -528,11 +528,11 @@ function ClaudeResult({ data }: { data: Record<string, unknown> }) {
             )}
             {Object.keys(models).length > 0 && (
                 <div>
-                    <p className="text-xs text-gray-500 mb-2">Models used</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Models used</p>
                     <div className="space-y-1.5">
                         {Object.entries(models).map(([model, usage]) => (
-                            <div key={model} className="flex justify-between items-center bg-black/20 rounded-lg px-3 py-2 text-xs">
-                                <span className="font-mono text-gray-300 truncate">{model}</span>
+                            <div key={model} className="flex justify-between items-center bg-gray-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs">
+                                <span className="font-mono text-gray-700 dark:text-gray-300 truncate">{model}</span>
                                 <span className="text-orange-300 font-mono ml-2">{(usage.input + usage.output).toLocaleString()}</span>
                             </div>
                         ))}
@@ -546,20 +546,20 @@ function ClaudeResult({ data }: { data: Record<string, unknown> }) {
 function GeminiResult({ data }: { data: Record<string, unknown> }) {
     const models = (data.models as { id: string; name: string; inputTokenLimit: number }[]) ?? [];
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-white/5">
-            <div className="flex items-center gap-2 bg-green-900/20 border border-green-500/20 rounded-xl p-3 text-sm">
-                <Check className="w-4 h-4 text-green-400" />
-                <span className="text-green-300">Key valid — {(data.totalModelsAvailable as number)} models accessible</span>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-gray-900/5 dark:border-white/5">
+            <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/20 rounded-xl p-3 text-sm">
+                <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                <span className="text-green-700 dark:text-green-300">Key valid — {(data.totalModelsAvailable as number)} models accessible</span>
             </div>
             <div className="space-y-1.5">
                 {models.slice(0, 5).map(m => (
-                    <div key={m.id} className="flex justify-between items-center bg-black/20 rounded-lg px-3 py-2 text-xs">
-                        <span className="font-mono text-blue-300 truncate">{m.name || m.id.split("/").pop()}</span>
-                        <span className="text-gray-500 ml-2">{(m.inputTokenLimit / 1000).toFixed(0)}k ctx</span>
+                    <div key={m.id} className="flex justify-between items-center bg-gray-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs">
+                        <span className="font-mono text-blue-700 dark:text-blue-300 truncate">{m.name || m.id.split("/").pop()}</span>
+                        <span className="text-gray-500 dark:text-gray-400 ml-2">{(m.inputTokenLimit / 1000).toFixed(0)}k ctx</span>
                     </div>
                 ))}
             </div>
-            <div className="flex items-start gap-2 bg-yellow-900/20 border border-yellow-500/20 rounded-xl p-3 text-xs text-yellow-300">
+            <div className="flex items-start gap-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/20 rounded-xl p-3 text-xs text-yellow-700 dark:text-yellow-300">
                 <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                 <span>For 30-day usage history, connect Google Cloud Monitoring below.</span>
             </div>
@@ -574,20 +574,20 @@ function GeminiMonitoringResult({ data }: { data: Record<string, unknown> }) {
     const maxVal = Math.max(...last7.map(d => d.requests), 1);
 
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-white/5">
-            <div className="flex items-center gap-2 bg-green-900/20 border border-green-500/20 rounded-xl p-3 text-sm">
-                <Check className="w-4 h-4 text-green-400" />
-                <span className="text-green-300">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-gray-900/5 dark:border-white/5">
+            <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/20 rounded-xl p-3 text-sm">
+                <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                <span className="text-green-700 dark:text-green-300">
                     {total.toLocaleString()} API requests in last 30 days (project: {data.projectId as string})
                 </span>
             </div>
             {last7.length > 0 && (
                 <div>
-                    <p className="text-xs text-gray-500 mb-2">Daily requests — last 7 days</p>
-                    <div className="flex items-end gap-1 h-14 bg-black/30 rounded-xl px-3 py-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Daily requests — last 7 days</p>
+                    <div className="flex items-end gap-1 h-14 bg-white/70 dark:bg-black/30 rounded-xl px-3 py-2">
                         {last7.map((d, i) => (
                             <div key={i} className="flex-1 flex flex-col justify-end">
-                                <div className="w-full rounded-sm bg-green-500/70 hover:bg-green-400 transition-colors"
+                                <div className="w-full rounded-sm bg-green-400 dark:bg-green-500/70 hover:bg-green-500 dark:hover:bg-green-400 transition-colors"
                                     style={{ height: `${(d.requests / maxVal) * 100}%`, minHeight: "2px" }}
                                     title={`${d.date}: ${d.requests} requests`} />
                             </div>
@@ -606,21 +606,21 @@ function OpenAIResult({ data }: { data: Record<string, unknown> }) {
     const usageNote = (data.usageNote as string) ?? "";
 
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-white/5">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pt-2 border-t border-gray-900/5 dark:border-white/5">
             {/* Status row */}
-            <div className="flex items-center gap-2 bg-green-900/20 border border-green-500/20 rounded-xl p-3 text-sm">
-                <Check className="w-4 h-4 text-green-400 shrink-0" />
-                <span className="text-green-300">Key valid — {total} models accessible · Tier: <strong>{tier}</strong></span>
+            <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-500/20 rounded-xl p-3 text-sm">
+                <Check className="w-4 h-4 text-green-600 dark:text-green-400 shrink-0" />
+                <span className="text-green-700 dark:text-green-300">Key valid — {total} models accessible · Tier: <strong>{tier}</strong></span>
             </div>
 
             {/* Model list */}
             <div>
-                <p className="text-xs text-gray-500 mb-2">Accessible models</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Accessible models</p>
                 <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
                     {models.map(m => (
-                        <div key={m.id} className="flex justify-between items-center bg-black/20 rounded-lg px-3 py-2 text-xs">
-                            <span className="font-mono text-emerald-300 truncate">{m.id}</span>
-                            <div className="flex gap-2 ml-2 shrink-0 text-gray-500">
+                        <div key={m.id} className="flex justify-between items-center bg-gray-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs">
+                            <span className="font-mono text-emerald-700 dark:text-emerald-300 truncate">{m.id}</span>
+                            <div className="flex gap-2 ml-2 shrink-0 text-gray-500 dark:text-gray-400">
                                 <span>{m.created}</span>
                             </div>
                         </div>
@@ -630,7 +630,7 @@ function OpenAIResult({ data }: { data: Record<string, unknown> }) {
 
             {/* Usage note */}
             {usageNote && (
-                <div className="flex items-start gap-2 bg-yellow-900/20 border border-yellow-500/20 rounded-xl p-3 text-xs text-yellow-300">
+                <div className="flex items-start gap-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/20 rounded-xl p-3 text-xs text-yellow-700 dark:text-yellow-300">
                     <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                     <span>{usageNote}</span>
                 </div>

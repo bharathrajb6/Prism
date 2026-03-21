@@ -5,26 +5,26 @@ import { Brain, Github } from "lucide-react";
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black/50 p-6 selection:bg-indigo-500/30">
-            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-10 text-center shadow-2xl relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-white/90 dark:bg-black/50 p-6 selection:bg-indigo-500/30">
+            <div className="w-full max-w-md bg-gray-900/5 dark:bg-white/5 backdrop-blur-xl border border-gray-900/10 dark:border-white/10 rounded-3xl p-8 sm:p-10 text-center shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/5 via-pink-500/5 to-orange-500/5 pointer-events-none" />
 
                 <div className="relative z-10">
                     <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-violet-500 via-pink-500 to-orange-400 flex items-center justify-center shadow-lg shadow-violet-500/30 mb-6">
-                        <Brain className="w-8 h-8 text-white" />
+                        <Brain className="w-8 h-8 text-gray-900 dark:text-white" />
                     </div>
 
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400 mb-2">
                         Welcome to Prism
                     </h1>
-                    <p className="text-gray-400 text-sm mb-10 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-10 leading-relaxed">
                         Sign in to connect, monitor, and analyze all your AI tool usage in one beautiful dashboard.
                     </p>
 
                     <div className="space-y-4">
                         <button
                             onClick={() => signIn("google", { callbackUrl: "/" })}
-                            className="w-full flex items-center justify-center gap-3 bg-white text-black font-semibold py-3.5 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg shadow-white/5"
+                            className="w-full flex items-center justify-center gap-3 bg-white text-black font-semibold py-3.5 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg shadow-black/5 dark:shadow-white/5"
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -38,14 +38,14 @@ export default function LoginPage() {
 
                         <button
                             onClick={() => signIn("github", { callbackUrl: "/" })}
-                            className="w-full flex items-center justify-center gap-3 bg-[#24292e] text-white font-semibold py-3.5 px-6 rounded-xl border border-white/10 hover:bg-[#2c3136] transition-colors shadow-lg shadow-black/50"
+                            className="w-full flex items-center justify-center gap-3 bg-[#24292e] text-gray-900 dark:text-white font-semibold py-3.5 px-6 rounded-xl border border-gray-900/10 dark:border-white/10 hover:bg-[#2c3136] transition-colors shadow-lg shadow-black/50"
                         >
                             <Github className="w-5 h-5" />
                             Continue with GitHub
                         </button>
                     </div>
 
-                    <p className="mt-8 text-xs text-gray-500">
+                    <p className="mt-8 text-xs text-gray-500 dark:text-gray-400">
                         By signing in, you agree to our Terms of Service and Privacy Policy. Authentication is powered by NextAuth.
                     </p>
                 </div>

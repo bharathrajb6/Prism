@@ -25,10 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen text-white`}
-        style={{ background: "linear-gradient(135deg, #0f0c29, #1a1a4e 40%, #0a0a1a)" }}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen text-gray-900 dark:text-white bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-[#0f0c29] dark:via-[#1a1a4e] dark:to-[#0a0a1a]`}
       >
         <Providers>
           <Navbar />
