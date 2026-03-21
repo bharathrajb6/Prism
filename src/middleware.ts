@@ -10,5 +10,6 @@ export const config = {
     matcher: [
         "/",
         "/connect/:path*",
+        "/api/integrations/:path*"
     ],
 };
