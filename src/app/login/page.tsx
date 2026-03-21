@@ -11,7 +11,7 @@ export default function LoginPage() {
 
                 <div className="relative z-10">
                     <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-violet-500 via-pink-500 to-orange-400 flex items-center justify-center shadow-lg shadow-violet-500/30 mb-6">
-                        <Brain className="w-8 h-8 text-gray-900 dark:text-white" />
+                        <Brain className="w-8 h-8 text-white" />
                     </div>
 
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400 mb-2">
@@ -38,7 +38,7 @@ export default function LoginPage() {
 
                         <button
                             onClick={() => signIn("github", { callbackUrl: "/" })}
-                            className="w-full flex items-center justify-center gap-3 bg-[#24292e] text-gray-900 dark:text-white font-semibold py-3.5 px-6 rounded-xl border border-gray-900/10 dark:border-white/10 hover:bg-[#2c3136] transition-colors shadow-lg shadow-black/50"
+                            className="w-full flex items-center justify-center gap-3 bg-[#24292e] text-white font-semibold py-3.5 px-6 rounded-xl border border-gray-900/10 dark:border-white/10 hover:bg-[#2c3136] transition-colors shadow-lg shadow-black/50"
                         >
                             <Github className="w-5 h-5" />
                             Continue with GitHub

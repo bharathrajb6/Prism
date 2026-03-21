@@ -107,12 +107,16 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void; 
         setStore(prev => ({ ...prev, isRefetching: true }));
         try {
             const promises = [];
+            const missingKeys: string[] = [];
 
             const claudeSecretRaw = localStorage.getItem(`${email}_prism_claude_secret`);
             if (claudeSecretRaw) {
                 const secret = JSON.parse(claudeSecretRaw);
                 promises.push(fetch("/api/integrations/claude", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
                     .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "claude", d, secret); }));
+            } else if (localStorage.getItem(`${email}_prism_claude_data`)) {
+                console.warn("Claude data exists but missing secret.");
+                missingKeys.push("Claude");
             }
 
             const geminiSecretRaw = localStorage.getItem(`${email}_prism_gemini_secret`);
@@ -120,6 +124,9 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void; 
                 const secret = JSON.parse(geminiSecretRaw);
                 promises.push(fetch("/api/integrations/gemini", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
                     .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "gemini", d, secret); }));
+            } else if (localStorage.getItem(`${email}_prism_gemini_data`)) {
+                console.warn("Gemini data exists but missing secret.");
+                missingKeys.push("Gemini");
             }
 
             const geminiMonSecretRaw = localStorage.getItem(`${email}_prism_gemini-monitoring_secret`);
@@ -134,6 +141,13 @@ export function useIntegrationData(): IntegrationStore & { refresh: () => void; 
                 const secret = JSON.parse(openaiSecretRaw);
                 promises.push(fetch("/api/integrations/openai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(secret) })
                     .then(r => r.json()).then(d => { if (d && !d.error) persistIntegration(email, "openai", d, secret); }));
+            } else if (localStorage.getItem(`${email}_prism_openai_data`)) {
+                console.warn("OpenAI data exists but missing secret.");
+                missingKeys.push("OpenAI");
+            }
+
+            if (missingKeys.length > 0) {
+                alert(`Warning: The refresh button cannot securely fetch new data for ${missingKeys.join(", ")} because their API keys are no longer found in local storage (likely connected before secure background refresh was implemented).\n\nPlease Disconnect and Connect them once inside 'Connect Tools' to securely cache their keys. After that, the refresh button will work flawlessly!`);
             }
 
             await Promise.allSettled(promises);

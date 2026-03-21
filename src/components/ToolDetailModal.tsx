@@ -187,8 +187,8 @@ function OverviewTab({ toolId, claudeData, geminiData, geminiMonitoringData, ope
                 </div>
                 <div className="bg-gray-900/5 dark:bg-white/5 rounded-2xl border border-gray-900/10 dark:border-white/10 p-5 space-y-2">
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Top GPT Models</h3>
-                    <div className="space-y-2">
-                        {openaiData.models.slice(0, 5).map((m, i) => (
+                    <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
+                        {openaiData.models.map((m, i) => (
                             <div key={m.id} className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: MODEL_COLORS[i % MODEL_COLORS.length] }} />
@@ -239,8 +239,8 @@ function OverviewTab({ toolId, claudeData, geminiData, geminiMonitoringData, ope
             {geminiData && (
                 <div className="bg-gray-900/5 dark:bg-white/5 rounded-2xl border border-gray-900/10 dark:border-white/10 p-5">
                     <h3 className="text-sm font-semibold mb-4 text-gray-700 dark:text-gray-300">Model Capabilities</h3>
-                    <div className="space-y-3">
-                        {geminiData.models.slice(0, 5).map(m => {
+                    <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+                        {geminiData.models.map(m => {
                             const maxCtx = Math.max(...geminiData.models.map(x => x.inputTokenLimit), 1);
                             return (
                                 <div key={m.id} className="flex items-center justify-between">
@@ -493,8 +493,11 @@ function ModelsTab({ toolId, claudeData, geminiData, openaiData }: {
     return (
         <div className="bg-gray-900/5 dark:bg-white/5 rounded-2xl border border-gray-900/10 dark:border-white/10 p-5">
             <h3 className="text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Available Gemini Models</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{geminiData.totalModelsAvailable} models accessible with your key</p>
-            <div className="space-y-3">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{geminiData.totalModelsAvailable} models accessible with your key</p>
+            <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-2.5 mb-4 text-xs text-blue-800 dark:text-blue-300">
+                <p><strong>Note:</strong> Values below represent maximum context window capabilities (token limits). Google AI Studio API keys do not currently provide per-model usage tracking.</p>
+            </div>
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
                 {geminiData.models.map((m, idx) => {
                     const ctxLabel = m.inputTokenLimit >= 1000000 ? `${(m.inputTokenLimit / 1000000).toFixed(1)}M` : `${(m.inputTokenLimit / 1000).toFixed(0)}k`;
                     return (
@@ -504,7 +507,7 @@ function ModelsTab({ toolId, claudeData, geminiData, openaiData }: {
                                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: MODEL_COLORS[idx % MODEL_COLORS.length] }} />
                                     <span className="font-medium text-sm text-blue-800 dark:text-blue-200">{m.name || m.id.split("/").pop()}</span>
                                 </div>
-                                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{ctxLabel} ctx</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">Max Context: {ctxLabel} tokens</span>
                             </div>
                             <div className="h-1 bg-gray-900/10 dark:bg-white/10 rounded-full overflow-hidden">
                                 <motion.div initial={{ width: 0 }} animate={{ width: `${(m.inputTokenLimit / maxCtx) * 100}%` }}

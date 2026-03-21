@@ -551,8 +551,8 @@ function GeminiResult({ data }: { data: Record<string, unknown> }) {
                 <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
                 <span className="text-green-700 dark:text-green-300">Key valid — {(data.totalModelsAvailable as number)} models accessible</span>
             </div>
-            <div className="space-y-1.5">
-                {models.slice(0, 5).map(m => (
+            <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                {models.map(m => (
                     <div key={m.id} className="flex justify-between items-center bg-gray-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs">
                         <span className="font-mono text-blue-700 dark:text-blue-300 truncate">{m.name || m.id.split("/").pop()}</span>
                         <span className="text-gray-500 dark:text-gray-400 ml-2">{(m.inputTokenLimit / 1000).toFixed(0)}k ctx</span>

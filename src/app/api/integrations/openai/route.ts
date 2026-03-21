@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
                 m.id.startsWith('chatgpt')
             )
             .sort((a, b) => b.created - a.created)
-            .slice(0, 20)
             .map(m => ({
                 id: m.id,
                 name: m.id,

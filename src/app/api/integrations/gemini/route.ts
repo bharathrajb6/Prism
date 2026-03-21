@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     try {
         // Step 1: Validate key and list available models
         const modelsRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=50`
+            `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=50`,
+            { cache: 'no-store' }
         );
 
         if (!modelsRes.ok) {
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         // Step 2: Collect token limits for each key model
         const modelDetails = await Promise.all(
-            geminiModels.slice(0, 6).map(async (m: { name?: string; displayName?: string; inputTokenLimit?: number; outputTokenLimit?: number }) => {
+            geminiModels.map(async (m: { name?: string; displayName?: string; inputTokenLimit?: number; outputTokenLimit?: number }) => {
                 return {
                     id: m.name ?? '',
                     name: m.displayName ?? m.name ?? '',
