@@ -140,14 +140,55 @@ Uses a standard **AI Studio API key** to validate connectivity and list models.
 
 ### Gemini — Cloud Monitoring *(optional)*
 
-Provides 30-day API request history using Google Cloud Monitoring.
+Provides **30-day API request history** using Google Cloud Monitoring. This is optional but highly recommended if you want to see daily usage trends for your Gemini API calls.
 
-1. Create a **Service Account** in [GCP IAM](https://console.cloud.google.com/iam-admin/serviceaccounts) with the **Monitoring Viewer** role
-2. Enable the **Cloud Monitoring API** on your project
-3. Download the service account JSON key
-4. Enter your GCP Project ID and paste the JSON into the card
+#### Step 1: Create or Select a Google Cloud Project
 
-**What you'll see:** Daily request trend chart, peak day, total requests.
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. If you already have a project where you use the Gemini API, select it from the project dropdown at the top. Otherwise, click **New Project**, give it a name, and create it.
+3. Note your **Project ID** (shown below the project name on the dashboard, e.g., `my-project-123456`). You will need this later.
+
+#### Step 2: Enable Required APIs
+
+1. In the left sidebar, go to **APIs & Services** → **Library**.
+2. Search for **Cloud Monitoring API** and click on it.
+3. Click **Enable** (if it's not already enabled).
+4. Also search for and enable the **Generative Language API** (this is the API that powers Gemini — it must be enabled on the same project for monitoring to track its requests).
+
+#### Step 3: Create a Service Account
+
+1. In the left sidebar, go to **IAM & Admin** → **[Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)**.
+2. Click **+ CREATE SERVICE ACCOUNT** at the top.
+3. Fill in the details:
+   - **Service account name:** `prism-monitoring` (or any name you prefer)
+   - **Service account ID:** auto-fills (e.g., `prism-monitoring@my-project.iam.gserviceaccount.com`)
+4. Click **CREATE AND CONTINUE**.
+
+#### Step 4: Grant the Monitoring Viewer Role
+
+1. In the **"Grant this service account access to project"** step, click the **Role** dropdown.
+2. Search for and select: **Monitoring Viewer** (`roles/monitoring.viewer`).
+3. Click **CONTINUE**, then **DONE**.
+
+#### Step 5: Generate a JSON Key
+
+1. On the Service Accounts list page, find the service account you just created and click on its **email**.
+2. Go to the **Keys** tab.
+3. Click **ADD KEY** → **Create new key**.
+4. Select **JSON** as the key type and click **CREATE**.
+5. A `.json` file will automatically download to your computer. **Keep this file safe** — it contains your credentials.
+
+#### Step 6: Connect in Prism
+
+1. Open Prism and navigate to the **Connect** page.
+2. Find the **Gemini — Cloud Monitoring** card.
+3. Enter your **GCP Project ID** (from Step 1).
+4. Open the downloaded JSON key file in a text editor, copy its entire contents, and paste it into the **Service Account JSON** field.
+5. Click **Connect**.
+
+**What you'll see:** Daily request trend chart, peak day, total API requests over the last 30 days.
+
+> **Tip:** Make sure the Gemini API calls you want to monitor are happening on the **same GCP project** where you created the service account. If you use multiple projects, you'll need to connect each one separately.
 
 ---
 
