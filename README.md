@@ -77,7 +77,40 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔑 Connecting Your AI Tools
+## � Google OAuth Setup
+
+To enable **"Continue with Google"** login, you need to create OAuth 2.0 credentials in the Google Cloud Console:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Select your project (or create a new one).
+3. Search for **"APIs & Services"** and go to the **Credentials** tab.
+4. If you haven't created one yet, click **+ CREATE CREDENTIALS** at the top and select **OAuth client ID**.
+5. Set the **"Application type"** to **Web application**.
+6. Under **"Authorized redirect URIs"**, add:
+   ```
+   http://localhost:3000/api/auth/callback/google
+   ```
+7. Under **"Authorized JavaScript origins"** (just above the redirect section), click **+ ADD URI** and paste:
+   ```
+   http://localhost:3000
+   ```
+8. Click **Create** — Google will now show you your **Client ID** (it usually ends in `.apps.googleusercontent.com`) and your **Client Secret**.
+
+Once you have the Client ID and Secret, create a `.env.local` file in the project root and paste them in:
+
+```env
+NEXTAUTH_SECRET=<generate-a-random-string>
+NEXTAUTH_URL=http://localhost:3000
+
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+> **Deploying to Vercel?** Add the same environment variables in your Vercel project settings (**Settings → Environment Variables**), and update `NEXTAUTH_URL` to your production domain (e.g., `https://your-app.vercel.app`). You must also add your Vercel domain and its callback URL (`https://your-app.vercel.app/api/auth/callback/google`) to the Google Cloud Console credentials.
+
+---
+
+## �🔑 Connecting Your AI Tools
 
 Log into Prism via GitHub or Google. Navigate to **Connect** (top nav) and paste your keys. Your API keys are strictly saved to your browser's local cache and are **never persisted in any centralized database**.
 
