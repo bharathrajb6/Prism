@@ -252,7 +252,5 @@ npm run build
 ## 🗺 Roadmap
 
 - [ ] Cursor / Windsurf usage when APIs become available
-- [x] Export usage report as CSV / PDF
 - [ ] Multi-account support per provider
 - [ ] Cost alerts / spending thresholds
-- [x] Dark / light theme toggle
